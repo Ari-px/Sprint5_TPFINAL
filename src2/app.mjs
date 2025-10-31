@@ -1,6 +1,6 @@
 import express from 'express';
-import { connectDB } from './src/config/dbConfig.mjs';
-import superheroesRouter from './src/routes/superheroesRoutes.mjs';
+import { connectDB } from './config/dbConfig.mjs';
+import superheroesRouter from './routes/superHeroRoutes.mjs';
 
 const app = express();
 app.use(express.json());
