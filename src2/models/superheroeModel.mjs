@@ -65,4 +65,6 @@ const superheroeSchema = new mongoose.Schema({
   },
 });
 
-export const Superheroe = mongoose.model("Superheroe", superheroeSchema);
+const Superheroe = mongoose.model("Superheroe", superheroeSchema);
+
+export default Superheroe; 

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard de Superhéroes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    a, button {
+      text-decoration: none;
+      color: #007bff;
+    }
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #dc3545;
+    }
+    button:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lista de Superhéroes</h1>
+
+  <a href="/heroes/agregar">➕ Agregar nuevo superhéroe</a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre Superhéroe</th>
+        <th>Nombre Real</th>
+        <th>Edad</th>
+        <th>Poderes</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% heroes.forEach(hero => { %>
+        <tr>
+          <td><%= hero.nombreSuperheroe %></td>
+          <td><%= hero.nombreReal %></td>
+          <td><%= hero.edad %></td>
+          <td><%= hero.poderes.join(", ") %></td>
+          <td>
+            <a href="/heroes/<%= hero._id %>/editar">✏️ Editar</a>
+            <form action="/heroes/<%= hero._id %>?_method=DELETE" method="POST" style="display:inline;" onsubmit="return confirm('¿Seguro que deseas eliminar este superhéroe?')">
+              <button type="submit">🗑️ Eliminar</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

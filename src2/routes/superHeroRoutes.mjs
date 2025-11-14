@@ -1,64 +1,41 @@
 import express from 'express';
-import { Superheroe } from '../models/superheroeModel.mjs';
+import {obtenerSuperheroePorIdController, obtenerTodosLosSuperheroesController,
+    buscarSuperheroesPorAtributoController, obtenerSuperheroesMayoresDe30Controller,
+    crearNuevoSuperHeroeController, actualizarSuperheroeController, eliminarSuperHeroePorIDController,
+    eliminarSuperHeroePorNombreDeHeroeController, renderizarFormCrearNuevoSuperHeroeController, 
+    renderizarFormEditarSuperHeroeController
+} from '../controllers/superheroesController.mjs';
+
+import {superHeroeValidator, eliminarSuperHeroeValidator} from './validationRules.mjs';
+
 
 const router = express.Router();
 
-// 📍 GET: obtener todos los superhéroes
-router.get('/', async (req, res) => {
-  try {
-    const heroes = await Superheroe.find();
-    res.json(heroes);
-  } catch (error) {
-    res.status(500).json({ message: 'Error al obtener los superhéroes', error });
-  }
-});
+//get espera una ruta y un handler/manejador
+router.get('/heroes', obtenerTodosLosSuperheroesController);
+router.get('/heroes/mayores-30', obtenerSuperheroesMayoresDe30Controller);
+router.get('/heroes/buscar/:atributo/:valor', buscarSuperheroesPorAtributoController);
 
-// 📍 POST: crear un nuevo superhéroe
-router.post('/', async (req, res) => {
-  try {
-    const nuevoHeroe = new Superheroe(req.body);
-    const guardado = await nuevoHeroe.save();
-    res.status(201).json(guardado);
-  } catch (error) {
-    res.status(400).json({ message: 'Error al crear el superhéroe', error });
-  }
-});
+//crear un nuevo heroe
+router.get('/heroes/agregar', renderizarFormCrearNuevoSuperHeroeController);
+//si se recibe una petición post para la ruta heroes/agregar se ejecuta la siguiente línea
+router.post('/heroes/agregar', superHeroeValidator, crearNuevoSuperHeroeController);
 
-// 📍 PUT: actualizar un superhéroe por ID
-router.put('/:id', async (req, res) => {
-  try {
-    const actualizado = await Superheroe.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true } // devuelve el nuevo documento actualizado
-    );
-    if (!actualizado) return res.status(404).json({ message: 'Superhéroe no encontrado' });
-    res.json(actualizado);
-  } catch (error) {
-    res.status(400).json({ message: 'Error al actualizar el superhéroe', error });
-  }
-});
+//Eliminar por nombre, manda por el body el nombreSuperHeroe
+router.delete('/heroes', eliminarSuperHeroeValidator, eliminarSuperHeroePorNombreDeHeroeController);
 
-// 📍 DELETE: borrar un superhéroe por ID
-router.delete('/:id', async (req, res) => {
-  try {
-    const borrado = await Superheroe.findByIdAndDelete(req.params.id);
-    if (!borrado) return res.status(404).json({ message: 'Superhéroe no encontrado' });
-    res.json({ message: 'Superhéroe eliminado', superheroe: borrado });
-  } catch (error) {
-    res.status(400).json({ message: 'Error al borrar el superhéroe', error });
-  }
-});
+//heroes/:id se dejó para el final para evitar que al escribir /mayores-30 lo interprete como un id
+router.get('/heroes/:id', obtenerSuperheroePorIdController);
 
-// 📍 DELETE: borrar un superhéroe por nombre
-router.delete('/nombre/:nombre', async (req, res) => {
-  try {
-    const borrado = await Superheroe.findOneAndDelete({ nombre: req.params.nombre });
-    if (!borrado) return res.status(404).json({ message: 'Superhéroe no encontrado' });
-    res.json({ message: 'Superhéroe eliminado', superheroe: borrado });
-  } catch (error) {
-    res.status(400).json({ message: 'Error al borrar por nombre', error });
-  }
-});
+//Modificar heroe existente
+router.get('/heroes/:id/editar', renderizarFormEditarSuperHeroeController);
+//si se recibe una petición post para la ruta heroes/agregar se ejecuta la siguiente línea
+router.put('/heroes/:id/editar', superHeroeValidator, actualizarSuperheroeController);
+
+router.delete('/heroes/:id', eliminarSuperHeroePorIDController);
+//http://localhost:3000/api/heroes/68f28aa5653a5ddc12de3b02
+
+
 
 export default router;
+
