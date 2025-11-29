@@ -1,0 +1,14 @@
+/* public/css/styles.css */
+body {
+    font-family: 'Quicksand', sans-serif;
+    background-color: #f8f9fa; /* Un gris claro */
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.footer {
+    background-color: #e9ecef; /* Un gris un poco más oscuro */
+    padding: 15px 0;
+}

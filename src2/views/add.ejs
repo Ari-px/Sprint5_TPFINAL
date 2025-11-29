@@ -1,0 +1,50 @@
+<div class="container my-4">
+    <h1 class="mb-4"><%= pageTitle %></h1>
+    <hr>
+
+    <% if (error) { %>
+        <div class="alert alert-danger" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> <%= error %>
+        </div>
+    <% } %>
+
+    <form action="/agregar" method="POST" class="needs-validation" novalidate>
+
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre del Superhéroe:</label>
+            <input 
+                type="text" 
+                class="form-control" 
+                id="nombre" 
+                name="nombre" 
+                placeholder="Ej: Clark Kent o Superman"
+                required
+                value="<%= typeof oldData !== 'undefined' && oldData.nombre ? oldData.nombre : '' %>"
+            >
+            <div class="invalid-feedback">
+                Por favor, ingresa el nombre del superhéroe.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="editorial" class="form-label">Editorial:</label>
+            <select class="form-select" id="editorial" name="editorial" required>
+                <option value="">Selecciona una Editorial</option>
+                
+                <% 
+                    const selectedEditorial = typeof oldData !== 'undefined' && oldData.editorial; 
+                %>
+
+                <option value="Marvel" <%= selectedEditorial === 'Marvel' ? 'selected' : '' %>>Marvel Comics</option>
+                <option value="DC" <%= selectedEditorial === 'DC' ? 'selected' : '' %>>DC Comics</option>
+                <option value="Independiente" <%= selectedEditorial === 'Independiente' ? 'selected' : '' %>>Independiente</option>
+            </select>
+            <div class="invalid-feedback">
+                Por favor, selecciona una editorial.
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary mt-3">Guardar Superhéroe</button>
+        <a href="/superheroes" class="btn btn-secondary mt-3">Cancelar</a>
+    </form>
+</div>
