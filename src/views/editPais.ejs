@@ -1,0 +1,161 @@
+<body>
+    <%
+        // =================================================================
+        // 1. HELPER FUNCTIONS (PARA LIMPIEZA DE CÓDIGO)
+        // =================================================================
+        // Función auxiliar para obtener el valor del campo
+        const getFieldValue = (dbField, formField) => {
+            if (typeof valoresRetornados === 'undefined') return '';
+            
+            // Prioridad 1: Datos que vienen de la validación fallida (ej: nombreComunPais)
+            if (valoresRetornados[formField] !== undefined) return valoresRetornados[formField];
+            
+            // Prioridad 2: Datos que vienen de la Base de Datos (ej: nombreComun)
+            if (valoresRetornados[dbField] !== undefined) {
+                // Si es un array (como capital), tomamos el primer elemento para el input simple
+                if (Array.isArray(valoresRetornados[dbField])) {
+                    return valoresRetornados[dbField].length > 0 ? valoresRetornados[dbField][0] : '';
+                }
+                return valoresRetornados[dbField];
+            }
+            return '';
+        };
+
+        // Función auxiliar para obtener el mensaje de error de un campo simple
+        const getErrorMsg = (campo) => {
+            if (typeof camposErroneos !== 'undefined' && camposErroneos && camposErroneos.includes(campo)) {
+                return mensajesDeError[camposErroneos.indexOf(campo)];
+            }
+            return '';
+        };
+
+        // Lógica de búsqueda de error para campos de array (ej: paisesFrontera.*)
+        const getArrayErrorMsg = (baseName) => {
+            if (typeof camposErroneos !== 'undefined' && camposErroneos) {
+                // Buscamos el error del array completo o de un elemento específico (paisesFrontera[X])
+                const index = camposErroneos.findIndex(campo => campo.startsWith(baseName));
+                return index !== -1 ? mensajesDeError[index] : '';
+            }
+            return '';
+        };
+    %>
+    
+    <form id="formPais" action="/api/paises/<%= valoresRetornados._id %>?_method=PUT" method="post">
+
+        <label for="nombreComunPais">Nombre Común:</label>
+        <input 
+            type="text" 
+            name="nombreComunPais" 
+            id="nombreComunPais" 
+            value="<%= getFieldValue('nombreComun', 'nombreComunPais') %>"
+        >
+        <p class="errorMesage"><%= getErrorMsg('nombreComunPais') %></p>
+
+        <label for="nombreOficialPais">Nombre Oficial:</label>
+        <input 
+            type="text" 
+            name="nombreOficialPais" 
+            id="nombreOficialPais" 
+            value="<%= getFieldValue('nombreOficial', 'nombreOficialPais') %>"
+            required
+        >
+        <p class="errorMesage"><%= getErrorMsg('nombreOficialPais') %></p>
+        
+        <label for="capitalPais">Capital</label>
+        <input 
+            type="text" 
+            name="capitalPais" 
+            id="capitalPais" 
+            value="<%= getFieldValue('capital', 'capitalPais') %>"
+        >
+        <p class="errorMesage"><%= getErrorMsg('capitalPais') %></p>
+
+        <div id="paisesFronteraContainer" class="input-array-group">
+            <label for="idPaisFrontera">Países Frontera: <span>(Código de 3 letras mayúsculas)</span></label>
+            <div class="input-group-add">
+                <input type="text" name="paisFronteraTemp" id="idPaisFrontera" placeholder="ARG" maxlength="3">
+                <button type="button" id="btnAgregarPaisFrontera">Agregar</button>
+            </div>
+            
+            <p class="errorMesage">
+                <%= getArrayErrorMsg('paisesFrontera') %>
+            </p>
+
+            <% 
+                // Definir la fuente del array: si hay error, usa paisesFrontera (req.body), si no, usa fronteras (DB)
+                const fronteras = getFieldValue('fronteras', 'paisesFrontera');
+                if (fronteras && Array.isArray(fronteras)) { 
+                    fronteras.forEach(frontera => { 
+            %>
+                <div class="input-group-item">
+                    <input type="text" name="paisesFrontera[]" class="inputVector dynamic-input" value="<%= frontera %>" readonly>  
+                    <button type="button" class="btnQuitar">Quitar</button>
+                </div>
+            <% 
+                    });
+                } 
+            %>
+        </div>
+
+        <label for="areaPais">Área</label>
+        <input 
+            type="number" 
+            name="areaPais" 
+            id="areaPais" 
+            value="<%= getFieldValue('area', 'areaPais') %>"
+            min="0"
+        >
+        <p class="errorMesage"><%= getErrorMsg('areaPais') %></p>
+
+        <label for="poblacionPais">Población</label>
+        <input 
+            type="number" 
+            name="poblacionPais" 
+            id="poblacionPais" 
+            value="<%= getFieldValue('poblacion', 'poblacionPais') %>"
+            min="0"
+            step="1"
+        >
+        <p class="errorMesage"><%= getErrorMsg('poblacionPais') %></p>
+        
+        <div id="timezonesContainer" class="input-array-group">
+            <label for="idTimezone">Timezones</label>
+            <div class="input-group-add">
+                <input 
+                    type="text" 
+                    name="timezoneTemp" 
+                    id="idTimezone" 
+                    placeholder="UTC-05:00" 
+                    maxlength="9"
+                >
+                <button type="button" id="btnAgregarTimezone">Agregar Timezone</button>
+            </div>
+
+            <% 
+                const timezones = getFieldValue('timezones', 'timezones');
+                if (timezones && Array.isArray(timezones)) { 
+                    timezones.forEach(timezone => { 
+            %>
+                <div class="input-group-item">
+                    <input type="text" name="timezones[]" class="inputVector dynamic-input" value="<%= timezone %>" readonly>
+                    <button type="button" class="btnQuitar">Quitar</button>
+                </div>
+            <% 
+                    });
+                }
+            %>
+        </div>
+
+        <input type="submit" value="Guardar">
+    </form>
+    
+    <script src="/js/formFunctions.mjs"></script>
+    <script>
+        // Inicializa la funcionalidad 'Quitar' para los elementos que vienen ya renderizados (tanto de DB como por error)
+        document.querySelectorAll('.btnQuitar').forEach(btnQuitar => {
+            btnQuitar.addEventListener('click', () => {
+                btnQuitar.parentElement.remove();
+            });
+        });
+    </script>
+</body>

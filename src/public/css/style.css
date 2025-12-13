@@ -1,0 +1,334 @@
+/* =========================================
+   1. Variables y Configuración Global
+   ========================================= */
+:root {
+    --primary-color: #cea1c9;    /* Rosa medio oscuro para Navbar */
+    --accent-color: #2b95a3;     /* Indigo profesional para acciones */
+    --danger-color: #e74c3c;     /* Rojo suave para eliminar */
+    --bg-color: #f4f7f6;         /* Gris muy claro de fondo (menos cansado que el blanco) */
+    --card-bg: #ffffff;          /* Blanco puro para tarjetas */
+    --text-color: #333333;       /* Texto casi negro */
+    --text-light: #ecf0f1;       /* Texto claro */
+    --shadow-sm: 0 2px 5px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente moderna */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px 0;
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* =========================================
+   2. Navbar (Barra de Navegación)
+   ========================================= */
+nav {
+    width: 100%;
+    background-color: var(--primary-color);
+    box-shadow: var(--shadow-sm);
+    position: sticky; /* Se queda pegado arriba */
+    top: 0;
+    z-index: 1000;
+}
+
+nav div ul {
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* Mobile first */
+}
+
+nav div ul li {
+    list-style: none;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1); /* Separador sutil */
+}
+
+nav div ul li a {
+    display: block;
+    padding: 15px;
+    text-decoration: none;
+    color: var(--text-light);
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+nav div ul li a:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+/* =========================================
+   3. Landing Page (Portada)
+   ========================================= */
+div.portadaContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+div.portadaContainer img {
+    max-width: 100%;
+    width: 300px; /* Tamaño controlado */
+    height: auto;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+}
+
+/* Botón estilo "Call to Action" moderno */
+div.portadaContainer a {
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 15px 40px;
+    color: white;
+    background-color: var(--accent-color);
+    border-radius: 50px; /* Bordes redondeados */
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+}
+
+div.portadaContainer a:hover {
+    transform: translateY(-3px); /* Efecto de elevación */
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.6);
+}
+
+/* Eliminamos el efecto :after antiguo para limpiar el diseño */
+div.portadaContainer a:after { content: none; }
+
+/* =========================================
+   4. Dashboard (Cartas de Países)
+   ========================================= */
+main div.direccion {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px; /* Espacio entre cartas */
+}
+
+div.card {
+    background-color: var(--card-bg);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm); /* Sombra suave en lugar de bordes punteados */
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+div.card:hover {
+    transform: translateY(-5px); /* Se levanta al pasar el mouse */
+    box-shadow: var(--shadow-md);
+}
+
+div.card li {
+    list-style: none;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+div.card li strong {
+    color: var(--primary-color);
+}
+
+/* =========================================
+   5. Botones (Editar / Eliminar)
+   ========================================= */
+div.botonesContainer {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    width: 100%;
+}
+
+div.botonesContainer a, 
+div.botonesContainer form {
+    flex: 1; /* Ocupan el mismo ancho */
+}
+
+.btn-delete, .btn-edit {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    transition: opacity 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-edit {
+    background-color: #57b8f8; /* Azul para editar */
+}
+
+.btn-delete {
+    background-color: var(--danger-color); /* Rojo para borrar */
+}
+
+.btn-edit:hover, .btn-delete:hover {
+    opacity: 0.85; /* Efecto hover simple y elegante */
+    background-color: inherit; /* Mantiene su color base */
+    color: white;
+}
+
+/* =========================================
+   6. Formularios
+   ========================================= */
+form#formPais {
+    background-color: var(--card-bg);
+    max-width: 600px;
+    margin: 20px auto; /* Centrado */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: var(--shadow-md);
+}
+
+form label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--primary-color);
+}
+
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px; /* Más espacio */
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus, input[type="number"]:focus {
+    border-color: var(--accent-color);
+    outline: none;
+    background-color: #fff;
+}
+
+/* Botón Guardar */
+form#formPais input[type=submit] {
+    background-color: var(--accent-color);
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form#formPais input[type=submit]:hover {
+    background-color: #219150;
+}
+
+/* Botones secundarios del form */
+form#formPais button[type="button"] {
+    margin-top: 10px;
+    background-color: #95a5a6; /* Gris neutro */
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+form#formPais button.btnQuitar {
+    background-color: #e74c3c;
+    border: none;
+}
+
+p.errorMesage {
+    color: var(--danger-color);
+    font-size: 0.9rem;
+    margin-top: -15px;
+    margin-bottom: 15px;
+}
+
+/* =========================================
+   7. About y Footer
+   ========================================= */
+div.about {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+    background: white;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+footer {
+    margin-top: auto; /* Empuja el footer al final */
+    padding: 20px;
+    background-color: var(--primary-color);
+    color: rgba(255, 255, 255, 0.959);
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* =========================================
+   8. Responsive Design (Media Queries)
+   ========================================= */
+
+/* Tablets y mayores */
+@media (min-width: 768px) {
+    /* Navbar horizontal */
+    nav div ul {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    nav div ul li {
+        width: auto;
+        border-bottom: none;
+    }
+
+    nav div ul li a {
+        padding: 20px 30px;
+    }
+
+    /* Grilla de Cards */
+    main div.direccion {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Grilla automática */
+        gap: 20px;
+        padding: 40px;
+    }
+    
+    /* Reseteamos margenes de card para el grid */
+    div.card {
+        width: 100%; 
+        margin: 0;
+    }
+}

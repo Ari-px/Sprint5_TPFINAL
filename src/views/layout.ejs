@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es"> <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gestión de países hispanohablantes de América. Proyecto final de la Diplomatura de Desarrollo Web - Catamarca.">
+    <meta name="author" content="Espeche Ariana De Jesús">
+
+    <title><%= titulo && titulo !== '' ? titulo : "Hispanoamérica: Dashboard de Países" %></title> 
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="app-header">
+        <%- include('partials/navbar') %>
+    </header>
+
+    <main class="app-main">
+        <%- include('partials/header') %>
+        
+        <div class="content-body">
+            <%- body %>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <%- include('partials/footer') %>
+    </footer>
+    
+</body>
+</html>

@@ -1,0 +1,27 @@
+<body>
+    <div class="direccion">
+        <% paises.forEach(pais => { %>
+            <div class="card">
+                <ul>
+                    <li><strong>Nombre:</strong> <%= pais.nombre %></li>
+                    <li><strong>Capital:</strong> <%= pais.capital %></li>
+                    <li><strong>Países Frontera:</strong> <%= pais.paisesFrontera.join(', ') %></li>
+                    <li><strong>Área:</strong> <%= pais.area %> </li>
+                    <li><strong>Población:</strong> <%= pais.poblacion %></li>
+                    <li><strong>Timezones:</strong> <%= pais.timezones.join(', ') %></li>
+                    <li><strong>Creador:</strong> <%= pais.creador %></li>
+                </ul>
+                <div class="botonesContainer">
+                    <a class="btn-edit" href="/api/paises/<%= pais.id %>/editar">Editar</a>
+                    <form method="post" action="/api/paises/<%= pais.id %>?_method=DELETE" class="w-full p-2" id="formDelete">
+                        <input type="hidden" name="heroeID">
+                        <input type="submit" class="btn-delete" value="Eliminar" id="btnDelete">
+                    </form>   
+                </div>
+                
+            </div>
+        <% }) %>     
+    </div>
+    
+    <script src="/js/dashboardFunctions.mjs"></script>   
+</body>

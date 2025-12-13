@@ -1,0 +1,131 @@
+<body>
+    <%
+        // 1. REFRACTORIZACIÓN DE LÓGICA EJS: Creamos una función de ayuda local
+        // Esto simplifica el código repetitivo de error/valor para cada campo.
+        const valor = (campo) => (typeof valoresRetornados !== 'undefined' && valoresRetornados[campo]) ? valoresRetornados[campo] : '';
+        
+        // Función auxiliar para obtener el mensaje de error de un campo simple
+        const getErrorMsg = (campo) => {
+            if (typeof camposErroneos !== 'undefined' && camposErroneos && camposErroneos.includes(campo)) {
+                return mensajesDeError[camposErroneos.indexOf(campo)];
+            }
+            return '';
+        };
+
+        // Lógica de búsqueda de error para campos de array (ej: paisesFrontera[0], paisesFrontera[1], etc.)
+        const getArrayErrorMsg = (baseName) => {
+            if (typeof camposErroneos !== 'undefined' && camposErroneos) {
+                const index = camposErroneos.findIndex(campo => campo.startsWith(baseName + '['));
+                return index !== -1 ? mensajesDeError[index] : '';
+            }
+            return '';
+        };
+    %>
+    
+    <form id="formPais" action="#" method="post">
+        
+        <label for="nombreComunPais">Nombre Común:</label>
+        <input 
+            type="text" 
+            name="nombreComunPais" 
+            id="nombreComunPais" 
+            placeholder="Argentina" 
+            value="<%= valor('nombreComunPais') %>"
+        >
+        <p class="errorMesage"><%= getErrorMsg('nombreComunPais') %></p>
+
+        <label for="nombreOficialPais">Nombre Oficial:</label>
+        <input 
+            type="text" 
+            name="nombreOficialPais" 
+            id="nombreOficialPais" 
+            placeholder="República Argentina"
+            value="<%= valor('nombreOficialPais') %>"
+        >
+        <p class="errorMesage"><%= getErrorMsg('nombreOficialPais') %></p>
+
+        <label for="capitalPais">Capital</label>
+        <input 
+            type="text" 
+            name="capitalPais" 
+            id="capitalPais" 
+            placeholder="Buenos Aires"
+            value="<%= valor('capitalPais') %>"
+        >
+        <p class="errorMesage"><%= getErrorMsg('capitalPais') %></p>
+
+        <div id="paisesFronteraContainer" class="input-array-group">
+            <label for="idPaisFrontera">Países Frontera: <span>(Código de 3 letras mayúsculas)</span></label>
+            <div class="input-group-add">
+                <input type="text" name="paisFronteraTemp" id="idPaisFrontera" placeholder="ARG" maxlength="3">
+                <button type="button" id="btnAgregarPaisFrontera">Agregar</button>
+            </div>
+            
+            <p class="errorMesage">
+                <%= getErrorMsg('paisesFrontera') %>
+                <%= getArrayErrorMsg('paisesFrontera') %>
+            </p>
+
+            <% if (valor('paisesFrontera') && valor('paisesFrontera').length > 0) { %>
+                <% valor('paisesFrontera').forEach(frontera => { %>
+                    <div class="input-group-item">
+                        <input type="text" name="paisesFrontera[]" class="inputVector dynamic-input" value="<%= frontera %>" readonly>
+                        <button type="button" class="btnQuitar">Quitar</button>
+                    </div>  
+                <% }); %>
+            <% } %>
+        </div>
+
+        <label for="areaPais">Área (km²)</label>
+        <input 
+            type="number" 
+            name="areaPais" 
+            id="areaPais"
+            min="0"
+            value="<%= valor('areaPais') %>"
+        >
+        <p class="errorMesage"><%= getErrorMsg('areaPais') %></p>
+
+        <label for="poblacionPais">Población (habitantes)</label>
+        <input 
+            type="number" 
+            name="poblacionPais" 
+            id="poblacionPais"
+            min="0"
+            step="1"
+            value="<%= valor('poblacionPais') %>"
+        >
+        <p class="errorMesage"><%= getErrorMsg('poblacionPais') %></p>
+        
+        <div id="timezonesContainer" class="input-array-group">
+            <label for="idTimezone">Timezones <span>(ej. America/Buenos_Aires)</span></label>
+            <div class="input-group-add">
+                <input type="text" name="timezoneTemp" id="idTimezone" placeholder="UTC-03:00">
+                <button type="button" id="btnAgregarTimezone">Agregar Timezone</button>
+            </div>
+            
+            <% if (valor('timezones') && valor('timezones').length > 0) { %>
+                <% valor('timezones').forEach(timezone => { %>
+                    <div class="input-group-item">
+                        <input type="text" name="timezones[]" class="inputVector dynamic-input" value="<%= timezone %>" readonly>
+                        <button type="button" class="btnQuitar">Quitar</button>
+                    </div>  
+                <% }); %>
+            <% } %>
+        </div>
+        
+        <input type="submit" value="Guardar">
+    </form>
+
+    <script src="/js/formFunctions.mjs"></script>
+    <script>
+        // La lógica para dar funcionalidad a los botones 'Quitar'
+        // que aparecen después de un error (o en el formulario de edición)
+        // se mantiene aquí, pero podría ser integrada en formFunctions.mjs
+        document.querySelectorAll('.btnQuitar').forEach(btnQuitar => {
+            btnQuitar.addEventListener('click', () => {
+                btnQuitar.parentElement.remove();
+            });
+        });
+    </script>
+</body>
