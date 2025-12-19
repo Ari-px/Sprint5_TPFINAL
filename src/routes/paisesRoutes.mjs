@@ -7,8 +7,8 @@ import {consumirAPIExternaDePaisesController, obtenerTodosLosPaisesController,
 
 import {paisValidator} from '../routes/validationRules.mjs';
 import {
-  creationValidationHandler,
-  updateValidationHandler
+  controlDeErroresCreación,
+  controlDeErroresEdición
 } from '../routes/errorHandler.mjs';
 
 const router = express.Router();
@@ -16,11 +16,11 @@ const router = express.Router();
 router.get('/paises/', obtenerTodosLosPaisesController);
 //crear país
 router.get('/paises/agregar', renderizarFormCrearNuevoPaiController);
-router.post('/paises/agregar', paisValidator, creationValidationHandler, crearNuevoPaisController);
+router.post('/paises/agregar', paisValidator, controlDeErroresCreación, crearNuevoPaisController);
 
 //editar país
 router.get('/paises/:id/editar', renderizarFormEditarPaisController);
-router.put('/paises/:id/editar', paisValidator, updateValidationHandler, actualizarPaisController);
+router.put('/paises/:id/editar', paisValidator, controlDeErroresEdición, actualizarPaisController);
 //eliminar país
 router.delete('/paises/:id/', eliminarPaisPorIDController);
 
