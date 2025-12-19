@@ -4,7 +4,7 @@ import { validationResult } from 'express-validator';
  * Middleware genérico para manejar errores de express-validator en formularios de Creación (addPais).
  * Si hay errores, renderiza la vista 'addPais' con los datos y mensajes de error.
  */
-export const creationValidationHandler = (req, res, next) => {
+export const controlDeErroresCreación = (req, res, next) => {
     // console.log("Middleware: Manejando errores de Creación"); // Limpiamos logs
 
     const errors = validationResult(req);
@@ -32,7 +32,7 @@ export const creationValidationHandler = (req, res, next) => {
  * Middleware genérico para manejar errores de express-validator en formularios de Edición (editPais).
  * Si hay errores, renderiza la vista 'editPais' con los datos, el ID y los mensajes de error.
  */
-export const updateValidationHandler = (req, res, next) => {
+export const controlDeErroresEdición = (req, res, next) => {
     // console.log("Middleware: Manejando errores de Edición"); // Limpiamos logs
 
     const errors = validationResult(req);
