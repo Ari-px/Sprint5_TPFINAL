@@ -1,5 +1,10 @@
 <body>
-    <form id="formPais" action="./editar?_method=PUT" method="post">
+    
+    <form 
+        id="formPais" 
+        action="/api/paises/<%= valoresRetornados._id %>/editar?_method=PUT" 
+        method="post"
+    >
         <label for="nombreComunPais">Nombre Común:</label>
         <% if (valoresRetornados.nombreComun) { %>
             <input type="text" name="nombreComunPais" id="nombreComunPais" value="<%= valoresRetornados.nombreComun %>">
@@ -25,8 +30,8 @@
         </p>
         
         <label for="capitalPais">Capital</label>
-        <% if (valoresRetornados.capital) { %>
-            <input type="text" name="capitalPais" id="capitalPais" value="<%= valoresRetornados.capital %>">
+        <% if (valoresRetornados.capital && Array.isArray(valoresRetornados.capital)) { %>
+            <input type="text" name="capitalPais" id="capitalPais" value="<%= valoresRetornados.capital[0] %>">
         <% } else if (valoresRetornados.capitalPais) { %>
             <input type="text" name="capitalPais" id="capitalPais" value="<%= valoresRetornados.capitalPais %>">
         <% } else { %>
@@ -43,11 +48,10 @@
             <p class="errorMesage">
                 <%= camposErroneos && camposErroneos.includes("paisesFrontera") ? mensajesDeError[camposErroneos.indexOf("paisesFrontera")] : '' %>
             </p>
-            <p class="errorMesage"> <!-- some verifica si hay un elemento con el substring -->
-                <%= camposErroneos && camposErroneos.some(campo => campo.includes("paisesFrontera[")) ? mensajesDeError[camposErroneos.findIndex(campo => campo.includes("paisesFrontera["))] : '' %>
+            <p class="errorMesage"> <%= camposErroneos && camposErroneos.some(campo => campo.includes("paisesFrontera[")) ? mensajesDeError[camposErroneos.findIndex(campo => campo.includes("paisesFrontera["))] : '' %>
             </p>
 
-            <% if (valoresRetornados.fronteras) { %>
+            <% if (valoresRetornados.fronteras && Array.isArray(valoresRetornados.fronteras)) { %>
                 <% valoresRetornados.fronteras.forEach(frontera => { %>
                     <div class="inputAndBtnContainer">
                         <input type="text" name="paisesFrontera[]" class="inputVector" 
@@ -55,7 +59,7 @@
                         <button type="button" class="btnQuitar">Quitar</button>
                     </div>
                 <% }); %>
-            <% } else if (valoresRetornados.paisesFrontera) { %>
+            <% } else if (valoresRetornados.paisesFrontera && Array.isArray(valoresRetornados.paisesFrontera)) { %>
                 <% valoresRetornados.paisesFrontera.forEach(frontera => { %>
                     <div class="inputAndBtnContainer">
                         <input type="text" name="paisesFrontera[]" class="inputVector" 
@@ -97,13 +101,15 @@
             pattern="^UTC-\d{2}:\d{2}$" title="El formato requerido: UTC-HH:MM (ej. UTC-05:00)" maxlength="9">
             <button type="button" id="btnAgregarTimezone">Agregar Timezone</button>
 
-            <% valoresRetornados.timezones.forEach(timezone => { %>
-                <div class="inputAndBtnContainer">
-                    <input type="text" name="timezones[]" class="inputVector" 
-                    required maxlength="9" value="<%= timezone %>"> 
-                    <button type="button" class="btnQuitar">Quitar</button>
-                </div>
-            <% }); %>
+            <% if (valoresRetornados.timezones && Array.isArray(valoresRetornados.timezones)) { %>
+                <% valoresRetornados.timezones.forEach(timezone => { %>
+                    <div class="inputAndBtnContainer">
+                        <input type="text" name="timezones[]" class="inputVector" 
+                        required maxlength="9" value="<%= timezone %>"> 
+                        <button type="button" class="btnQuitar">Quitar</button>
+                    </div>
+                <% }); %>
+            <% } %>
         </div>
         <input type="submit" value="Guardar">
     </form>
